@@ -5,5 +5,5 @@ Gravity point is GCP
 
 Endpoints: Your calendar entries using your GMail credentials
 
-making dashboard display like 
+making dashboard display like [picture]
 
