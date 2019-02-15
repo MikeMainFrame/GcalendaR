@@ -28,18 +28,17 @@ function listUpcomingEvents() {
 }
   function calendarEntriesUI (calendarJSON) { 
     var gcSlots = JSON.parse(calendarJSON);
-    
-
-
     const oRadius = 500, iRadius = 400; 
     var zOffset = 0, zMinutes = 0, jx=0, ix=0, zh=0, arcSweep = 0;
+    var zero = new Date(gcSlots.items[0].start.dateTime);    
+    var t = Date.now(); 
+    
     var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
     svg.setAttribute("width", "100%");
     svg.setAttribute("viewBox", "0 0 1200 1200");
     svg.setAttribute("color", "#fff");
     svg.setAttribute("background", "#000");
-    var t = Date.now(); 
-    var zero = new Date(gcSlots.items[0].start.dateTime);
+    
     zero.getHours() > 12 ? zh = zero.getHours() - 12 : zh = zero.getHours();
     zOffset = 450 - ((zh * 30) + (zero.getMinutes() / 2));
     zMinutes = t / 60000 / 2; 
