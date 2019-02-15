@@ -28,6 +28,8 @@ function listUpcomingEvents() {
 }
   function calendarEntriesUI (calendarJSON) { 
     var gcSlots = JSON.parse(calendarJSON);
+    
+
 
     const oRadius = 500, iRadius = 400; 
     var zOffset = 0, zMinutes = 0, jx=0, ix=0, zh=0, arcSweep = 0;
@@ -36,22 +38,22 @@ function listUpcomingEvents() {
     svg.setAttribute("viewBox", "0 0 1200 1200");
     svg.setAttribute("color", "#fff");
     svg.setAttribute("background", "#000");
-    var zTimestamp = new Date (parseFloat(zGeoList[ix].timestamp));
-    zTimestamp.getHours() > 12 ? zh = zTimestamp.getHours() - 12 : zh = zTimestamp.getHours();
-    zOffset = 450 - ((zh * 30) + (zTimestamp.getMinutes() / 2));
-    zMinutes = zGeoList[ix].duration / 60000 / 2; 
+    var t = Date.now(); 
+    var zero = new Date(gcSlots.items[0].start.dateTime);
+    zero.getHours() > 12 ? zh = zero.getHours() - 12 : zh = zero.getHours();
+    zOffset = 450 - ((zh * 30) + (zero.getMinutes() / 2));
+    zMinutes = t / 60000 / 2; 
     (zMinutes > 180) ? arcSweep = 1 : arcSweep = 0; 
     svg.appendChild(bCircle(500, "#212121"));   
-    svg.appendChild(pathPeriod(zOffset,zOffset - zMinutes,iRadius,oRadius,arcSweep,coleur,500));             
+    svg.appendChild(pathPeriod(zOffset,zOffset - zMinutes,iRadius,oRadius,arcSweep,"#A00",500));             
     svg.appendChild(bCircle(400, "#000"));   
-    svg.appendChild(addText("Racing Sans One", 244, coleur, 500, 360, parseInt(zGeoList[ix].duration / 60000), 500));
-    svg.appendChild(addText("Roboto", 80, "#888", 500, 492, timeStamp(zTimestamp),500));   
+    svg.appendChild(addText(244, "A00", 500, 360, parseInt(zero / 60000), 500));
+    svg.appendChild(addText(80, "#888", 500, 492, zero,500));   
     
     return svg;
 
     function addText (fType, fSize, color, x, y, title, fWeight) {      
       var text = document.createElementNS("http://www.w3.org/2000/svg", 'text'); 
-      text.setAttribute("font-family",  fType);
       text.setAttribute("font-size",  fSize);  
       text.setAttribute("font-weight",  fWeight);      
       text.setAttribute("fill", color);      
