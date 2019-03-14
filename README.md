@@ -1,9 +1,10 @@
 # GcalendaR
-It list your future calendar entries, and show it in animated svg tick tack tick tack
+Concept is to put your workhours in your google calendar - primary.
 
-Gravity point is GCP
+Tagging description with #workhours - makes it eligible for extraction
 
-Endpoints: Your calendar entries using your GMail credentials
+Visiting this URL, I extract your work hours and I do this every time you enter this URL.
 
-making dashboard display like [picture]
+Neat way for your boss, to accumulate worh hours
 
+Mike
