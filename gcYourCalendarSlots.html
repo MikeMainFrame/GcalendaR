@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html>
-<titleGoogle Calendar Entries :: By TRITICUM</title>
+<title>Google Calendar Entries :: By TRITICUM</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css?family=Merriweather">
-<link href="https://storage.googleapis.com/milliniumfalcon/falcon.png" rel="icon">
-<link href="/stylesheets/gc.css" rel="stylesheet" >
-<body style="font-familiy: Merriweather; margin: 0; overflow: hidden">
-  <pre id="lColumn">
-    Calendar Slots from your personal planning ...
-  </pre>    
-  <script src="gcGAPI.js"></script> 
+<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
+<link href="https://storage.googleapis.com/milliniumfalcon/alarm.png" rel="icon">
+<link href="/stylesheets/sw.css" rel="stylesheet" >
+<body class="pink">
+  <pre id="zSum">
+
+    Sum of hours: "
+
+  </pre> 
+  <br style="clear:both" />
+  <br style="clear:both" />
+  <script src="js/gc.js"></script>
   <script src="https://apis.google.com/js/api.js"
-  onload="this.onload=function(){};handleClientLoad()"
-  onreadystatechange="if (this.readyState === 'complete') this.onload()">
-  </script>
-  </body>
+    onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+</body>
 </html> 
