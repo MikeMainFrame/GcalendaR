@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+<title>Google Calendar Entries :: By TRITICUM</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
+<link href="https://storage.googleapis.com/milliniumfalcon/alarm.png" rel="icon">
+<link href="/stylesheets/sw.css" rel="stylesheet" >
+
+<body class="pink">
+  <svg viewBox="0 0 1200 1200" version="1.1" xmlns="http://www.w3.org/2000/svg"
+    id="zCircularTime" 
+    style="background: none ; width: 70% ; margin: 0 15%" >  
+    <title>Akkumulated Work Hours :: 40 days</title>
+     <radialGradient id="aGrey" gradientUnits="userSpaceOnUse" cx="600" cy="600" r="500" fx="600" fy="600">       
+      <stop offset="0%" stop-color="rgba(255,0,160,0.3)"></stop>
+      <stop offset="80%" stop-color="#222"></stop>
+      <stop offset="90%" stop-color="#333"></stop>
+      <stop offset="100%" stop-color="#222">
+    </stop>
+    </radialGradient>
+    <g> 
+      <circle cx="600" cy="600" r="500" fill="url(#aGrey)" />
+    </g>    
+  </svg>
+  <script src="js/gcWorkHours.js"></script>
+  <script src="https://apis.google.com/js/api.js"
+    onload="this.onload=function(){};handleClientLoad()"
+    onreadystatechange="if (this.readyState === 'complete') this.onload()"></script>
+</body>
+
+</html> 
