@@ -5,8 +5,8 @@ function handleClientLoad() {
 }
 function initClient() {
   gapi.client.init({
-    apiKey: '.........................',
-    clientId: '........................apps.googleusercontent.com',
+    apiKey: '...',
+    clientId: '54....apps.googleusercontent.com',
     discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
     scope: 'https://www.googleapis.com/auth/calendar.readonly',
   }).then(function() {    
@@ -25,7 +25,7 @@ function listUpcomingEvents() {
     'timeMax': (new Date()).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
-    'maxResults': 50,
+    'maxResults': 99,
     'orderBy': 'startTime'
   }).then(function(response) {
     var slices = [], c1 = document.getElementById("c1"), c2 = document.getElementById("c2");
@@ -34,14 +34,14 @@ function listUpcomingEvents() {
         var pair = {};
         pair.timestamp = new Date(response.result.items[ix].start.dateTime);
         pair.duration = new Date(response.result.items[ix].end.dateTime) - pair.timestamp;
+        pair.task = response.result.items[ix].summary;
         slices.push(pair);
         c1.appendChild(calendarEntriesDisplay(response.result.items[ix]))
       }
     }
-    
+    dispatchData.displayName = response.result.items[0].organizer.displayName;
     dispatchData.email = response.result.items[0].organizer.email;
     dispatchData.timeSlots = slices;
-
     c2.appendChild(ringOfTime(slices));
   });
 }
@@ -63,8 +63,10 @@ function ringOfTime(slices) {
   g.setAttribute("transform", "translate(100,100)");  
 
   g.appendChild(addCircle(oRadius,"rgba(0,0,255,0.3)"));
-  g.appendChild(addCircle(iRadius,"rgba(0,0,255,0.3)"));
- 
+  var sendData = addCircle(iRadius,"rgba(0,0,255,0.3)");
+  sendData.setAttribute("id", "zxmit");
+  g.appendChild(sendData);
+
   for (var ix = 0; ix < slices.length; ix++) {      
     zMinutes = slices[ix].duration / zUnits;
     zOffset = (slices[ix].timestamp - min) / zUnits;
@@ -98,11 +100,11 @@ function ringOfTime(slices) {
     text.setAttribute("y",  Y);           
     text.textContent = parseInt(slices[ix].duration / 60000);
 
-    g.appendChild(text);
+    //g.appendChild(text);
 
   }      
 
-  g.appendChild(addText(48,"#fff",500,500, parseInt(zSum / 60000)));
+  g.appendChild(addText(48,"#fff",500,500, parseInt(zSum / 60000) + " minutes"));
   
   for (var ix = 0; ix < 360; ix = ix + 9) {    
     var thatDay = new Date(parseFloat(max - (ix / 9 * (1000*60*60*24))));
@@ -148,14 +150,17 @@ function ringOfTime(slices) {
   textPath.textContent = dateMonthYear(new Date(min)) + " - " + dateMonthYear(new Date());
   text.appendChild(textPath);
   g.appendChild(text);
-  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');    
-  text.setAttribute("x",  oRadius);     
-  text.setAttribute("y",  oRadius + 33);           
-  text.textContent = "click to dispatch data to central";
-  g.appendChild(text);
 
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("text-anchor", "end");
+  text.setAttribute("x",  500);     
+  text.setAttribute("y",  400);  
+  text.setAttribute("text-anchor", "middle");
+  text.setAttribute("font-size", 48);
+  text.textContent = "click to rapport";  
+  g.appendChild(text)
 
-  svg.addEventListener("click", wrapUp);
+  sendData.addEventListener("click", wrapUp);
 
   svg.appendChild(g);
 
@@ -194,6 +199,7 @@ function calendarEntriesDisplay(gcSlots) {
   path.setAttribute("fill", "none");
   path.setAttribute("d", "M 1000,500 A 500,500 0 0,1 0,500");
   g.appendChild(path);  
+
   var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
   text.setAttribute("text-anchor", "start");
   text.setAttribute("font-size", 64);
@@ -203,6 +209,7 @@ function calendarEntriesDisplay(gcSlots) {
   textPath.setAttribute("href", "#ztext");
   textPath.textContent = weekDay(new Date(gcSlots.start.dateTime));
   text.appendChild(textPath);
+
   g.appendChild(text);
 
   g.appendChild(addText(144, "#fff", 500, 360, zMinutes * 2, 500));
@@ -279,26 +286,12 @@ function weekDay(jDate) {
   return "MONDAY   -TUESDAY  -WEDNESDAY-THURSDAY -FRIDAY   -SATURDAY -SUNDAY   ".substr((jDate.getUTCDay() * 10), 9);
 }
 function wrapUp() {
-  
-  var zTransaction = document.implementation.createDocument ("", "", null);    
-  var zWho = zTransaction.createElement("who");  
-  zWho.setAttribute("id", dispatchData.email);    
-  zWho.setAttribute("when", (new Date()).toISOString());  
-
-  for (ix = 0; ix < dispatchData.timeSlots.length; ix++) {
-    var zSlot = zTransaction.createElement("item");
-    zSlot.setAttribute("timestamp",dispatchData.timeSlots[ix].timestamp);
-    zSlot.setAttribute("duration",dispatchData.timeSlots[ix].duration);
-    zWho.appendChild(zSlot);
-  }
-
-  zTransaction.appendChild(zWho);
-  
+ 
   var xmlhttp = new XMLHttpRequest();    
   
   xmlhttp.onreadystatechange = () => { 
-    if (xmlhttp.readyState === 4 ) document.getElementById("c1").innerHTML = "<h1>Done</h1>";
+    if (xmlhttp.readyState === 4 ) document.getElementById("c1").innerHTML = "<h1>Data dispatched</h1>";
   };
-  xmlhttp.open("POST","gcTransaction.php",true);  
-  xmlhttp.send(zTransaction);  
+  xmlhttp.open("POST","gcTimeSlotsPut.php",true);  
+  xmlhttp.send(JSON.stringify(dispatchData));
 }
