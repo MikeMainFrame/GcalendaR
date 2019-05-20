@@ -5,8 +5,8 @@ function handleClientLoad() {
 }
 function initClient() {
   gapi.client.init({
-    apiKey: 'AIzaSyBUnSQok1aZX75FfNHRosmxN2c2WNJY7tw',
-    clientId: '545632756570-6rnj9b07bo29k8cu8002aue2t96ttci5.apps.googleusercontent.com',
+    apiKey: '...',
+    clientId: '....apps.googleusercontent.com',
     discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
     scope: 'https://www.googleapis.com/auth/calendar.readonly',
   }).then(function() {    
