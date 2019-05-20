@@ -1,10 +1,4 @@
-# GcalendaR
-Concept is to put your workhours in your google calendar - primary.
-
-Tagging description with #workhours - makes it eligible for extraction
-
-Visiting this https://hansolo.appspot.com/gcWorkHours40Days.html, I extract your work hours and I do this every time you enter this URL.
-
-Neat way for your boss, to accumulate worh hours
-
-Mike
+This is made using GCP.
+It extracts event data from your Google Calendar, using Google API.
+Data is contained in buckets, as JSON 
+No external dependencies, pure vanilla javascript and PHP
