@@ -1,16 +1,23 @@
-<!DOCTYPE html>
-
 <html>
+
 <title>gcWorkHours40Days :: Google Cloud :: By TRITICUM</title>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css?family=Roboto|Roboto+Mono" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:100,100i,400,400i,700,700i" rel="stylesheet">
 <link href="https://storage.googleapis.com/milliniumfalcon/falconPink.png" rel="icon">
 <link href="/stylesheets/sw.css" rel="stylesheet" >
 
-<body class="hustler">
+<body id="workHours">
+
+  <svg font-family="IBM Plex Sans" width="100%" viewBox="0 0 2048 128" xmlns="http://www.w3.org/2000/svg" id="h">
+    <rect x="0" y="0" width="2048" height="128" fill="#333"></rect>
+    <image x="1960" y="24" width="64" height="64" href="static/touch.svg"></image>
+    <rect x="0" y="104" width="2048" height="8" fill="#888"></rect>
+  </svg>
+
   <div id="c1" style="float:left; width: 39%"></div>      
-  <div id="c2" style="float:right; width: 59%"></div>  
+  <div id="c2" style="position:fixed; width: 59%; left: 40%"></div>  
+
   <script src="js/gcWorkHours40Days.js"></script>
   <script src="https://apis.google.com/js/api.js"
     onload="this.onload=function(){};handleClientLoad()"
