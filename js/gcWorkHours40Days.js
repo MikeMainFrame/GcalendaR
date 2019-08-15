@@ -1,4 +1,4 @@
-var GoogleAuth, dispatchData = {};
+var GoogleAuth, dispatchData = {}; zSumma = 0;
 
 function handleClientLoad() {
   gapi.load('client:auth2', initClient);
@@ -6,7 +6,7 @@ function handleClientLoad() {
 function initClient() {
   gapi.client.init({
     apiKey: '...',
-    clientId: '54....apps.googleusercontent.com',
+    clientId: '545632756570-6rnj9b07bo29k8cu8002aue2t96ttci5.apps.googleusercontent.com',
     discoveryDocs: ["https://www.googleapis.com/discovery/v1/apis/calendar/v3/rest"],
     scope: 'https://www.googleapis.com/auth/calendar.readonly',
   }).then(function() {    
@@ -21,14 +21,15 @@ function initClient() {
 }
 function listUpcomingEvents() {
   gapi.client.calendar.events.list({
-    'calendarId': 'primary',
+    'calendarId': 'primary',    
     'timeMax': (new Date()).toISOString(),
+    'timeMin': (new Date(new Date()-40*24*60*60*1000)).toISOString(),
     'showDeleted': false,
     'singleEvents': true,
     'maxResults': 99,
     'orderBy': 'startTime'
   }).then(function(response) {
-    var slices = [], c1 = document.getElementById("c1"), c2 = document.getElementById("c2");
+    var slices = [], h = document.getElementById("h"), c1 = document.getElementById("c1"), c2 = document.getElementById("c2");
     for (var ix = 0; ix < response.result.items.length; ix++) {      
       if (/#workhours/.test(response.result.items[ix].description)) {       
         var pair = {};
@@ -36,12 +37,15 @@ function listUpcomingEvents() {
         pair.duration = new Date(response.result.items[ix].end.dateTime) - pair.timestamp;
         pair.task = response.result.items[ix].summary;
         slices.push(pair);
-        c1.appendChild(calendarEntriesDisplay(response.result.items[ix]))
+        c1.appendChild(calendarEntriesDisplay(response.result.items[ix]));
+        zSumma += pair.duration;
       }
     }
     dispatchData.displayName = response.result.items[0].organizer.displayName;
     dispatchData.email = response.result.items[0].organizer.email;
     dispatchData.timeSlots = slices;
+
+    h.appendChild(headInfo(dispatchData));
     c2.appendChild(ringOfTime(slices));
   });
 }
@@ -53,7 +57,7 @@ function ringOfTime(slices) {
       
   var svg = document.createElementNS("http://www.w3.org/2000/svg", 'svg');
   svg.setAttribute("viewBox", "0 0 1200 1200");
-  svg.setAttribute("style", "background: rgba(0,0,255,0.3) ; float:left");
+
 
   var g = document.createElementNS("http://www.w3.org/2000/svg", 'g');  
   g.setAttribute("text-anchor", "middle");
@@ -63,6 +67,14 @@ function ringOfTime(slices) {
   g.setAttribute("transform", "translate(100,100)");  
 
   g.appendChild(addCircle(oRadius,"rgba(0,0,255,0.3)"));
+  var image = document.createElementNS("http://www.w3.org/2000/svg", 'image');  
+  image.setAttribute("href", "https://storage.googleapis.com/milliniumfalcon/falconRotate.svg");
+  image.setAttribute("height", oRadius);
+  image.setAttribute("width", oRadius);
+  image.setAttribute("x", 250);
+  image.setAttribute("y", 250);
+  g.appendChild(image);
+
   var sendData = addCircle(iRadius,"rgba(0,0,255,0.3)");
   sendData.setAttribute("id", "zxmit");
   g.appendChild(sendData);
@@ -100,11 +112,8 @@ function ringOfTime(slices) {
     text.setAttribute("y",  Y);           
     text.textContent = parseInt(slices[ix].duration / 60000);
 
-    //g.appendChild(text);
-
   }      
-
-  g.appendChild(addText(48,"#fff",500,500, parseInt(zSum / 60000) + " minutes"));
+  g.appendChild(addText(48,"#fff",500,250, parseInt(zSum / 60000) + " minutes"));
   
   for (var ix = 0; ix < 360; ix = ix + 9) {    
     var thatDay = new Date(parseFloat(max - (ix / 9 * (1000*60*60*24))));
@@ -154,16 +163,16 @@ function ringOfTime(slices) {
   var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
   text.setAttribute("text-anchor", "end");
   text.setAttribute("x",  500);     
-  text.setAttribute("y",  400);  
+  text.setAttribute("y",  800);  
   text.setAttribute("text-anchor", "middle");
-  text.setAttribute("font-size", 48);
+  text.setAttribute("font-size", 36);
   text.textContent = "click to rapport";  
-  g.appendChild(text)
+  g.appendChild(text);
 
   sendData.addEventListener("click", wrapUp);
 
   svg.appendChild(g);
-
+// 
   return(svg);
 }
 /**
@@ -217,7 +226,7 @@ function calendarEntriesDisplay(gcSlots) {
   
   svg.appendChild(g);
 
-  svg.appendChild(addText(96, "#fff", 1150, 200, gcSlots.summary, 900, "start"));
+  svg.appendChild(addText(96, "#fff", 1150, 200, gcSlots.summary, 700, "start"));
   
   var fObject = document.createElementNS("http://www.w3.org/2000/svg", 'foreignObject');
   fObject.setAttribute("x", 1200);
@@ -227,7 +236,7 @@ function calendarEntriesDisplay(gcSlots) {
 
   var div = document.createElementNS('http://www.w3.org/1999/xhtml', 'div');
   div.textContent = gcSlots.description;
-  div.setAttribute("style", "font-size:36pt")
+  div.setAttribute("style", "font-size:48pt")
   fObject.appendChild(div);
   svg.appendChild(fObject);
 
@@ -286,12 +295,91 @@ function weekDay(jDate) {
   return "MONDAY   -TUESDAY  -WEDNESDAY-THURSDAY -FRIDAY   -SATURDAY -SUNDAY   ".substr((jDate.getUTCDay() * 10), 9);
 }
 function wrapUp() {
- 
+ time
   var xmlhttp = new XMLHttpRequest();    
-  
+  // 
   xmlhttp.onreadystatechange = () => { 
     if (xmlhttp.readyState === 4 ) document.getElementById("c1").innerHTML = "<h1>Data dispatched</h1>";
   };
   xmlhttp.open("POST","gcTimeSlotsPut.php",true);  
   xmlhttp.send(JSON.stringify(dispatchData));
+}
+
+function headInfo (times) {
+
+  var g = document.createElementNS("http://www.w3.org/2000/svg", 'g');
+  g.setAttribute("stroke", '#888');
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 30);
+  text.setAttribute("y", 30);
+  text.setAttribute("stroke", "none");
+  text.setAttribute("fill", "#fff");
+  text.setAttribute("font-size", 48);
+  text.setAttribute("font-weight", 900);
+  text.setAttribute("transform", "rotate(90 30 30)");
+  text.textContent =  "#1"
+  g.appendChild(text);
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 96);
+  text.setAttribute("y", 40);
+  text.setAttribute("font-size", 24);
+  text.setAttribute("font-weight", 100);
+  text.setAttribute("fill", "#888");
+  text.textContent =  times.email;
+  g.appendChild(text);
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 96);
+  text.setAttribute("y", 84);
+  text.setAttribute("font-size", 48);
+  text.setAttribute("font-weight", 600);
+  text.setAttribute("fill", "#fff");
+  text.textContent =  times.displayName || "Self";
+  g.appendChild(text);
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 660);
+  text.setAttribute("y", 40);
+  text.setAttribute("font-size", 36);  
+  text.setAttribute("font-weight", 100);
+  text.setAttribute("fill", "#888");
+  text.textContent = (times.timeSlots[0].timestamp).toISOString();
+  g.appendChild(text);
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 660);
+  text.setAttribute("y", 84);
+  text.setAttribute("fill", "#888");  
+  text.setAttribute("font-weight", 100);
+  text.setAttribute("font-size", 36);
+  text.textContent = (times.timeSlots[times.timeSlots.length-1].timestamp).toISOString();
+  g.appendChild(text);
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", 'text');
+  text.setAttribute("x", 1224);
+  text.setAttribute("y", 84);
+  text.setAttribute("fill", '#fff');
+  text.setAttribute("font-size", 48);
+  text.setAttribute("font-weight", 100);
+  text.textContent = "workHours: ";
+  g.appendChild(text);
+
+  var tspan = document.createElementNS("http://www.w3.org/2000/svg", 'tspan');
+  tspan.setAttribute("font-weight", '900');
+  tspan.textContent = milliSecToHourMinutes(zSumma);
+  text.appendChild(tspan);
+  g.appendChild(text);
+
+  return g;
+
+  function milliSecToHourMinutes (duration) {
+    var hours = parseInt(duration / 36E5);
+    var temp = duration - (hours * 36E5);
+    if (temp > 2280000) return hours + '\u00BE';
+    if (temp > 1680000) return hours + '\u00BD';
+    if (temp >  480000) return hours + '\u00BC';
+    return hours;
+  }
 }
