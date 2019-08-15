@@ -5,43 +5,15 @@ inbound_services:
 handlers:
 - url: /stylesheets
   static_dir: stylesheets
-
-- url: /_ah/mail/.+
-  script: /swMailArrival.php
-  login: admin
-
+  
 - url: /static
   static_dir: static
 
-- url: /js/swGAPI.js
-  script: /js/swGAPI.js
-  
 - url: /js/gcWorkHours.js
   script: /js/gcWorkHours.js
   
 - url: /js/gcWorkHours40Days.js
   script: /js/gcWorkHours40Days.js
-
-- url: /js/swListBucketObjects.js
-  script: /js/swListBucketObjects.js
-
-- url: /swListBucketObjects.php
-  script: /swListBucketObjects.php 
-  
-- url: /swListBucketObjects.html
-  script: /swListBucketObjects.html
-
-- url: /swMailBurst.php
-  script: /swMailBurst.php
-
-- url: /js/gbBucketObjects.js
-  script: /js/gbBucketObjects.js
-
-- url: /gbBucket.html
-  script: /gbBucket.html
-
-- url: /swBucket.html
-  script: /swBucket.html
 
 - url: /gcWorkHours.html
   script: /gcWorkHours.html
@@ -52,9 +24,6 @@ handlers:
 - url: /gcTransaction.php
   script: /gcTransaction.php
 
-- url: /slam.php
-  script: /slam.php
-  
 - url: /gcTimeSlotsPut.php
   script: /gcTimeSlotsPut.php
 
@@ -70,33 +39,5 @@ handlers:
 - url: /gcManageTime.html
   script: /gcManageTime.html
 
-- url: /swMailNow.html
-  script: /swMailNow.html
-
-- url: /swMailEmitSave.php
-  script: /swMailEmitSave.php
-
-- url: /mcMailReplies.php
-  script: /mcMailReplies.php
-  
-- url: /swTransaction.php
-  script: /swTransaction.php
-  
-- url: /demo.php
-  script: /demo.php
-
 - url: /js/gc.js
   script: /js/gc.js
-
-- url: /js/wh.js
-  script: /js/wh.js
-
-- url: /js/swMail.js
-  script: /js/swMail.js
-
-- url: /swGC.php
-  script: /swGC.php
-
-- url: /.*
-  script: swChewBacca.html
-  
